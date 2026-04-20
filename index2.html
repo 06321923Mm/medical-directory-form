@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دليل العراق الطبي — إضافة طبيب</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --bg2: #0f1628;
+    --card: #141d35;
+    --border: #1e2d50;
+    --accent: #2563eb;
+    --accent2: #3b82f6;
+    --accent-glow: rgba(37,99,235,0.3);
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --success: #10b981;
+    --error: #ef4444;
+    --gold: #f59e0b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 50% at 20% 10%, rgba(37,99,235,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(16,185,129,0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.6s ease;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(37,99,235,0.15);
+    border: 1px solid rgba(37,99,235,0.3);
+    color: var(--accent2);
+    font-size: 0.8rem;
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+  }
+
+  .header p {
+    color: var(--text2);
+    font-size: 0.95rem;
+  }
+
+  /* Progress */
+  .progress-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .progress-step {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .progress-step.active {
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+
+  .progress-step.done {
+    background: var(--success);
+  }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.4s ease;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .card-title .icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(37,99,235,0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+
+  /* Form elements */
+  .field {
+    margin-bottom: 1.2rem;
+  }
+
+  label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 0.5rem;
+  }
+
+  label .req {
+    color: var(--accent2);
+    margin-right: 2px;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="url"],
+  textarea,
+  select {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+    background: var(--card);
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: var(--text3);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 1rem center;
+    padding-left: 2.5rem;
+  }
+
+  /* Radio cards */
+  .radio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .radio-card {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .radio-card input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .radio-label:hover {
+    border-color: var(--accent2);
+    background: rgba(37,99,235,0.08);
+  }
+
+  .radio-card input:checked + .radio-label {
+    border-color: var(--accent);
+    background: rgba(37,99,235,0.15);
+    color: #fff;
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  .radio-icon {
+    font-size: 1.3rem;
+  }
+
+  /* Buttons */
+  .btn-next {
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-next:hover {
+    background: var(--accent2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+
+  .btn-next:active { transform: translateY(0); }
+
+  .btn-back {
+    width: 100%;
+    padding: 0.75rem;
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+  }
+
+  .btn-back:hover {
+    border-color: var(--text3);
+    color: var(--text);
+  }
+
+  /* Other input */
+  .other-input {
+    margin-top: 0.75rem;
+    display: none;
+  }
+
+  .other-input.show { display: block; }
+
+  /* Success */
+  .success-card {
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(16,185,129,0.15);
+    border: 2px solid var(--success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin: 0 auto 1.5rem;
+    animation: popIn 0.4s ease;
+  }
+
+  .success-card h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--success);
+    margin-bottom: 0.5rem;
+  }
+
+  .success-card p {
+    color: var(--text2);
+    margin-bottom: 2rem;
+  }
+
+  .btn-new {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-new:hover { background: var(--accent2); }
+
+  /* Error */
+  .error-msg {
+    font-size: 0.8rem;
+    color: var(--error);
+    margin-top: 0.4rem;
+    display: none;
+  }
+
+  .field.has-error input,
+  .field.has-error select,
+  .field.has-error textarea {
+    border-color: var(--error);
+  }
+
+  .field.has-error .error-msg { display: block; }
+
+  /* Loading */
+  .loading {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--text2);
+    font-size: 0.9rem;
+  }
+
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  /* Animations */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Step visibility */
+  .step { display: none; }
+  .step.active { display: block; }
+
+  /* Mobile */
+  @media (max-width: 480px) {
+    .radio-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.5rem; }
+    .card { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">🏥 دليل العراق الطبي</div>
+    <h1>إضافة طبيب أو مركز</h1>
+    <p>أضف بياناتك لمساعدة المرضى في إيجادك</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-step active" id="p1"></div>
+    <div class="progress-step" id="p2"></div>
+    <div class="progress-step" id="p3"></div>
+    <div class="progress-step" id="p4"></div>
+    <div class="progress-step" id="p5"></div>
+  </div>
+
+  <!-- ══ خطوة 1: الاسم ══ -->
+  <div class="step active" id="step1">
+    <div class="card">
+      <div class="card-title">
+        <div class="icon">👤</div>
+        الاسم
+      </div>
+      <div class="field" id="f-name">
+        <label><span class="req">*</span> اسم الطبيب أو المركز الطبي</label>
+        <input type="text" id="name" placeholder="مثال: دكتور أحمد محمد أو مركز الشفاء الطبي">
+        <div class="error-msg">الاسم مطلوب</div>
+      </div>
+      <button class="btn-next" onclick="goStep(2)">التالي ←</button>
+    </div>
+  </div>
+
+  <!-- ══ خطوة 2: المجال الصحي والتخصص ══ -->
+  <div class="step" id="step2">
+    <div class="card">
+      <div class="card-title">
+        <div class="icon">🩺</div>
+        المجال الصحي
+      </div>
+      <div class="field" id="f-category">
+        <label><span class="req">*</span> اختر المجال</label>
+        <div class="radio-grid">
+          <label class="radio-card">
+            <input type="radio" name="category" value="طبيب" onchange="onCategoryChange()">
+            <div class="radio-label"><span class="radio-icon">👨‍⚕️</span> طبيب</div>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="category" value="طبيب أسنان" onchange="onCategoryChange()">
+            <div class="radio-label"><span class="radio-icon">🦷</span> طبيب أسنان</div>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="category" value="صيدلية" onchange="onCategoryChange()">
+            <div class="radio-label"><span class="radio-icon">💊</span> صيدلية</div>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="category" value="مختبر" onchange="onCategoryChange()">
+            <div class="radio-label"><span class="radio-icon">🔬</span> مختبر</div>
+          </label>
+          <label class="radio-card" style="grid-column: span 2;">
+            <input type="radio" name="category" value="اشعة وسونار" onchange="onCategoryChange()">
+            <div class="radio-label"><span class="radio-icon">📡</span> اشعة وسونار</div>
+          </label>
+        </div>
+        <div class="error-msg">الرجاء اختيار المجال</div>
+      </div>
+
+      <!-- تخصصات الطبيب -->
+      <div class="field" id="f-doc-spec" style="display:none;">
+        <label><span class="req">*</span> التخصص</label>
+        <select id="docSpec" onchange="onDocSpecChange()">
+          <option value="">— اختر التخصص —</option>
+          <option>الباطنية والصدرية والقلبية</option>
+          <option>الباطنية - الجهاز الهضمي</option>
+          <option>الباطنية - أمراض الكلى</option>
+          <option>الباطنية - أمراض الدم</option>
+          <option>الباطنية - الأورام والغدد</option>
+          <option>الباطنية - غدد الصماء والسكري</option>
+          <option>الباطنية - اختصاص دقيق جهاز التنفسي والصدرية</option>
+          <option>القلبية</option>
+          <option>جراحة القلب والصدر والاوعية الدموية</option>
+          <option>اختصاص دقيق أيكو القلب والشرابي</option>
+          <option>قسطرة الشرابي والاوردة الاشعة التداخلية</option>
+          <option>اختصاص دقيق تشوهات القلب الولادية</option>
+          <option>الجراحة العامة الأطباء فقط</option>
+          <option>جراحة عامه الطبيبات فقط</option>
+          <option>الجراحة التجميلية</option>
+          <option>جراحة الجملة العصبية</option>
+          <option>جراحة الكسور والمفاصل</option>
+          <option>جراحة المجاري البولية</option>
+          <option>جراحة أطفال</option>
+          <option>طب وجراحة العيون</option>
+          <option>الانف والاذن والحنجرة</option>
+          <option>النسائية</option>
+          <option>اختصاص طب الأطفال</option>
+          <option>النفسية</option>
+          <option>طب الجملة العصبية</option>
+          <option>عيادات الفسلجة العصبية لتخطيط الاعصاب والعضلات والدماغ</option>
+          <option>أختصاص التخدير وطب الألم والعناية المركزة</option>
+          <option>الجلدية والتناسلية والتجميلية</option>
+          <option>طب الأسرة</option>
+          <option>طب المجتمع وطب عام</option>
+          <option>اختصاص التغذية</option>
+          <option>المفاصل</option>
+          <option>الطب الرياضي والعلاج التكميلي</option>
+          <option>الطب النووي والغدة الدرقية</option>
+          <option>السمع والنطق والتوازن</option>
+          <option>مراكز العقيم وأطفال الانابيب</option>
+          <option>مراكز لعلاج التوحد والنطق والتأتأة والقوقعة وتنمية القدرات</option>
+          <option>عيادات ومراكز العلاج الطبيعي والتأهيل الطبي</option>
+          <option>عيادات ومراكز لفحص هشاشة العظام</option>
+          <option>مراكز للأطراف والمساند الصناعية</option>
+          <option>الممرضين</option>
+          <option value="other">تخصص جديد...</option>
+        </select>
+        <div class="other-input" id="docSpecOther">
+          <input type="text" id="docSpecOtherText" placeholder="اكتب التخصص الجديد">
+        </div>
+        <div class="error-msg">الرجاء اختيار التخصص</div>
+      </div>
+
+      <!-- تخصصات الاشعة -->
+      <div class="field" id="f-radio-spec" style="display:none;">
+        <label><span class="req">*</span> نوع الاشعة والسونار</label>
+        <select id="radioSpec" onchange="onRadioSpecChange()">
+          <option value="">— اختر النوع —</option>
+          <option>اشعة وسونار</option>
+          <option>اشعة وسونار ورنين</option>
+          <option>اشعة وسونار ومفراس</option>
+          <option>اشعة وسونار ومفراس ورنين</option>
+          <option value="other">نوع جديد...</option>
+        </select>
+        <div class="other-input" id="radioSpecOther">
+          <input type="text" id="radioSpecOtherText" placeholder="اكتب النوع الجديد">
+        </div>
+        <div class="error-msg">الرجاء اختيار النوع</div>
+      </div>
+
+      <button class="btn-next" onclick="goStep(3)">التالي ←</button>
+      <button class="btn-back" onclick="goStep(1)">← رجوع</button>
+    </div>
+  </div>
+
+  <!-- ══ خطوة 3: المحافظة والمنطقة ══ -->
+  <div class="step" id="step3">
+    <div class="card">
+      <div class="card-title">
+        <div class="icon">📍</div>
+        الموقع
+      </div>
+
+      <div class="field" id="f-gove">
+        <label><span class="req">*</span> المحافظة</label>
+        <select id="gove" onchange="onGoveChange()">
+          <option value="">— اختر المحافظة —</option>
+          <option>البصرة</option>
+          <option>بغداد</option>
+          <option>الموصل</option>
+          <option>صلاح الدين</option>
+          <option>ذي قار</option>
+          <option>الديوانية</option>
+          <option>بابل</option>
+          <option>كربلاء</option>
+          <option>النجف</option>
+          <option>الأنبار</option>
+          <option>كركوك</option>
+          <option>ديالى</option>
+          <option>واسط</option>
+          <option>ميسان</option>
+          <option>المثنى</option>
+          <option>أربيل</option>
+          <option>دهوك</option>
+          <option>السليمانية</option>
+          <option>حلبجة</option>
+        </select>
+        <div class="error-msg">المحافظة مطلوبة</div>
+      </div>
+
+      <!-- مناطق البصرة -->
+      <div class="field" id="f-area-basra" style="display:none;">
+        <label>المنطقة</label>
+        <select id="areaBasra" onchange="onAreaBasraChange()">
+          <option value="">— اختر المنطقة —</option>
+          <option>ابي الخصيب</option>
+          <option>الأربع شوارع</option>
+          <option>الاصمعي</option>
+          <option>البراضعية</option>
+          <option>البصرة القديمة</option>
+          <option>التنومة</option>
+          <option>الجبيلة</option>
+          <option>الجزائر</option>
+          <option>الجزيرة</option>
+          <option>الجمعيات</option>
+          <option>الجمهورية</option>
+          <option>الجنينة</option>
+          <option>الحكيمية</option>
+          <option>الحيانية</option>
+          <option>الخليلية</option>
+          <option>الدير</option>
+          <option>الزبير</option>
+          <option>الطويسة</option>
+          <option>العباسية</option>
+          <option>العشار</option>
+          <option>الفاو</option>
+          <option>القبلة</option>
+          <option>القرنة</option>
+          <option>الكرمة</option>
+          <option>المدينة</option>
+          <option>المشراق الجديد</option>
+          <option>المطيحة</option>
+          <option>المعقل</option>
+          <option>النجيبية</option>
+          <option>الهارثة</option>
+          <option>ام قصر</option>
+          <option>بريهة</option>
+          <option>حي الأصدقاء</option>
+          <option>خمسة ميل</option>
+          <option>خور الزبير</option>
+          <option>سفوان</option>
+          <option>شارع العسكري</option>
+          <option>عشار</option>
+          <option>كرمة علي</option>
+          <option>مجمع الامل السكنية</option>
+          <option>ياسين خريبط</option>
+          <option value="other">منطقة جديدة...</option>
+        </select>
+        <div class="other-input" id="areaBasraOther">
+          <input type="text" id="areaBasraOtherText" placeholder="اكتب اسم المنطقة">
+        </div>
+      </div>
+
+      <!-- مناطق باقي المحافظات -->
+      <div class="field" id="f-area-other" style="display:none;">
+        <label>المنطقة</label>
+        <input type="text" id="areaOther" placeholder="اكتب اسم المنطقة">
+      </div>
+
+      <button class="btn-next" onclick="goStep(4)">التالي ←</button>
+      <button class="btn-back" onclick="goStep(2)">← رجوع</button>
+    </div>
+  </div>
+
+  <!-- ══ خطوة 4: العنوان والتواصل ══ -->
+  <div class="step" id="step4">
+    <div class="card">
+      <div class="card-title">
+        <div class="icon">📞</div>
+        بيانات الاتصال
+      </div>
+
+      <div class="field">
+        <label>العنوان التفصيلي</label>
+        <input type="text" id="addr" placeholder="مثال: شارع الجمهورية - مجمع الطب الحديث - الطابق الثاني">
+      </div>
+
+      <div class="field">
+        <label>رقم الهاتف</label>
+        <input type="tel" id="ph" placeholder="07XXXXXXXXX">
+      </div>
+
+      <div class="field">
+        <label>رقم هاتف ثاني</label>
+        <input type="tel" id="ph2" placeholder="07XXXXXXXXX">
+      </div>
+
+      <div class="field">
+        <label>رابط الموقع على خرائط Google</label>
+        <input type="url" id="mapUrl" placeholder="https://maps.google.com/...">
+      </div>
+
+      <div class="field">
+        <label>ملاحظات</label>
+        <textarea id="notes" placeholder="أي معلومات إضافية مفيدة..."></textarea>
+      </div>
+
+      <button class="btn-next" onclick="submitForm()" id="submitBtn">
+        <span id="submitText">إرسال ✓</span>
+        <div class="loading" id="loadingDiv">
+          <div class="spinner"></div>
+          جاري الإرسال...
+        </div>
+      </button>
+      <button class="btn-back" onclick="goStep(3)">← رجوع</button>
+    </div>
+  </div>
+
+  <!-- ══ خطوة 5: نجاح ══ -->
+  <div class="step" id="step5">
+    <div class="card success-card">
+      <div class="success-icon">✓</div>
+      <h2>تم الإرسال بنجاح!</h2>
+      <p>شكراً لمساهمتك في دليل العراق الطبي.<br>سيتم مراجعة البيانات وإضافتها قريباً.</p>
+      <button class="btn-new" onclick="resetForm()">➕ إضافة طبيب آخر</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzrgUVt0iqqj3W-Vu-WtkGAdrB4XVvlxmRzv_4gJAWtxZKOGmTPHtR_Cx5NziwbufXxmg/exec';
+
+let currentStep = 1;
+const totalSteps = 4;
+
+function updateProgress(step) {
+  for (let i = 1; i <= totalSteps; i++) {
+    const p = document.getElementById('p' + i);
+    if (i < step) { p.className = 'progress-step done'; }
+    else if (i === step) { p.className = 'progress-step active'; }
+    else { p.className = 'progress-step'; }
+  }
+}
+
+function goStep(step) {
+  if (step > currentStep && !validateStep(currentStep)) return;
+  
+  document.getElementById('step' + currentStep).classList.remove('active');
+  currentStep = step;
+  document.getElementById('step' + currentStep).classList.add('active');
+  updateProgress(step);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateStep(step) {
+  let valid = true;
+
+  if (step === 1) {
+    const name = document.getElementById('name').value.trim();
+    const f = document.getElementById('f-name');
+    if (!name) { f.classList.add('has-error'); valid = false; }
+    else f.classList.remove('has-error');
+  }
+
+  if (step === 2) {
+    const cat = document.querySelector('input[name="category"]:checked');
+    const f = document.getElementById('f-category');
+    if (!cat) { f.classList.add('has-error'); valid = false; }
+    else {
+      f.classList.remove('has-error');
+      if (cat.value === 'طبيب') {
+        const spec = document.getElementById('docSpec').value;
+        const fSpec = document.getElementById('f-doc-spec');
+        if (!spec) { fSpec.classList.add('has-error'); valid = false; }
+        else fSpec.classList.remove('has-error');
+      }
+      if (cat.value === 'اشعة وسونار') {
+        const spec = document.getElementById('radioSpec').value;
+        const fSpec = document.getElementById('f-radio-spec');
+        if (!spec) { fSpec.classList.add('has-error'); valid = false; }
+        else fSpec.classList.remove('has-error');
+      }
+    }
+  }
+
+  if (step === 3) {
+    const gove = document.getElementById('gove').value;
+    const f = document.getElementById('f-gove');
+    if (!gove) { f.classList.add('has-error'); valid = false; }
+    else f.classList.remove('has-error');
+  }
+
+  return valid;
+}
+
+function onCategoryChange() {
+  const cat = document.querySelector('input[name="category"]:checked');
+  document.getElementById('f-doc-spec').style.display = 'none';
+  document.getElementById('f-radio-spec').style.display = 'none';
+  if (!cat) return;
+  if (cat.value === 'طبيب') document.getElementById('f-doc-spec').style.display = 'block';
+  if (cat.value === 'اشعة وسونار') document.getElementById('f-radio-spec').style.display = 'block';
+}
+
+function onDocSpecChange() {
+  const val = document.getElementById('docSpec').value;
+  const other = document.getElementById('docSpecOther');
+  other.className = 'other-input' + (val === 'other' ? ' show' : '');
+}
+
+function onRadioSpecChange() {
+  const val = document.getElementById('radioSpec').value;
+  const other = document.getElementById('radioSpecOther');
+  other.className = 'other-input' + (val === 'other' ? ' show' : '');
+}
+
+function onGoveChange() {
+  const gove = document.getElementById('gove').value;
+  document.getElementById('f-area-basra').style.display = gove === 'البصرة' ? 'block' : 'none';
+  document.getElementById('f-area-other').style.display = (gove && gove !== 'البصرة') ? 'block' : 'none';
+}
+
+function onAreaBasraChange() {
+  const val = document.getElementById('areaBasra').value;
+  const other = document.getElementById('areaBasraOther');
+  other.className = 'other-input' + (val === 'other' ? ' show' : '');
+}
+
+function getSpec() {
+  const cat = document.querySelector('input[name="category"]:checked');
+  if (!cat) return '';
+  if (cat.value === 'طبيب') {
+    const v = document.getElementById('docSpec').value;
+    if (v === 'other') return document.getElementById('docSpecOtherText').value.trim();
+    return v;
+  }
+  if (cat.value === 'اشعة وسونار') {
+    const v = document.getElementById('radioSpec').value;
+    if (v === 'other') return document.getElementById('radioSpecOtherText').value.trim();
+    return v;
+  }
+  return cat.value;
+}
+
+function getArea() {
+  const gove = document.getElementById('gove').value;
+  if (gove === 'البصرة') {
+    const v = document.getElementById('areaBasra').value;
+    if (v === 'other') return document.getElementById('areaBasraOtherText').value.trim();
+    return v;
+  }
+  return document.getElementById('areaOther').value.trim();
+}
+
+async function submitForm() {
+  if (!validateStep(3)) { goStep(3); return; }
+
+  const btn = document.getElementById('submitBtn');
+  const submitText = document.getElementById('submitText');
+  const loadingDiv = document.getElementById('loadingDiv');
+
+  submitText.style.display = 'none';
+  loadingDiv.style.display = 'flex';
+  btn.disabled = true;
+
+  const cat = document.querySelector('input[name="category"]:checked');
+
+  const data = {
+    name:    document.getElementById('name').value.trim(),
+    spec:    getSpec(),
+    gove:    document.getElementById('gove').value,
+    area:    getArea() || null,
+    addr:    document.getElementById('addr').value.trim() || null,
+    ph:      document.getElementById('ph').value.trim() || null,
+    ph2:     document.getElementById('ph2').value.trim() || null,
+    map_url: document.getElementById('mapUrl').value.trim() || null,
+    notes:   document.getElementById('notes').value.trim() || null,
+  };
+
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if (result.status === 'ok') {
+      document.getElementById('step4').classList.remove('active');
+      currentStep = 5;
+      document.getElementById('step5').classList.add('active');
+      document.getElementById('progressBar').style.display = 'none';
+    } else {
+      throw new Error(result.message || 'فشل الإرسال');
+    }
+  } catch (e) {
+    alert('حدث خطأ، يرجى المحاولة مرة أخرى');
+    submitText.style.display = 'inline';
+    loadingDiv.style.display = 'none';
+    btn.disabled = false;
+  }
+}
+
+function resetForm() {
+  document.getElementById('step5').classList.remove('active');
+  document.getElementById('progressBar').style.display = 'flex';
+  document.querySelectorAll('input[type="text"], input[type="tel"], input[type="url"], textarea').forEach(el => el.value = '');
+  document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+  document.getElementById('f-doc-spec').style.display = 'none';
+  document.getElementById('f-radio-spec').style.display = 'none';
+  document.getElementById('f-area-basra').style.display = 'none';
+  document.getElementById('f-area-other').style.display = 'none';
+  document.getElementById('submitText').style.display = 'inline';
+  document.getElementById('loadingDiv').style.display = 'none';
+  document.getElementById('submitBtn').disabled = false;
+  currentStep = 1;
+  document.getElementById('step1').classList.add('active');
+  updateProgress(1);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
